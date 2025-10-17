@@ -141,12 +141,7 @@ func (uc *UserUseCase) Logout(input dto.LogoutInput) error {
 		return errors.New("token not found!")
 	}
 
-	res := uc.TokenRepo.Delete(existedUser.ID)
-	if res != nil {
-		return nil, res
-	}
-
-	return user, nil
+	return uc.TokenRepo.Delete(existedUser.ID)
 
 }
 

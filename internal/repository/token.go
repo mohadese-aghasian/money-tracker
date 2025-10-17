@@ -29,7 +29,7 @@ func (rep UserTokenRepoGormPostgres) Insert(user_token *entity.UserToken) error 
 }
 
 func (rep UserTokenRepoGormPostgres) Delete(id uint) error {
-	return rep.db.Model(&UserToken{}).Where("id = ?", id).Update("status_id", 0).Error
+	return rep.db.Where("id = ?", id).Delete(&UserToken{}).Error
 }
 
 func (rep UserTokenRepoGormPostgres) FindByToken(token string, status_id []uint) (*entity.UserToken, error) {

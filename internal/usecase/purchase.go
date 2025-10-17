@@ -17,8 +17,12 @@ type PurchaseUseCase struct {
 	CatRepo entity.CategoryRepository
 }
 
-func NewPurchaseUseCase(repo entity.PurchaseRepository) *PurchaseUseCase {
-	return &PurchaseUseCase{Repo: repo}
+func NewPurchaseUseCase(repo entity.PurchaseRepository, tag entity.TagRepository, cat entity.CategoryRepository) *PurchaseUseCase {
+	return &PurchaseUseCase{
+		Repo:    repo,
+		TagRepo: tag,
+		CatRepo: cat,
+	}
 }
 
 // /-----------------------add-----------------------------
@@ -28,8 +32,8 @@ func (uc *PurchaseUseCase) Add(input dto.AddPurchaseInput) (*entity.Purchase, er
 		input.StatusID = 1
 	}
 
-	category, err_c := uc.CatRepo.FindById(*input.CategoryId)
-	if err_c != nil || category == nil {
+	category, err := uc.CatRepo.FindById(*input.CategoryId)
+	if err != nil || category == nil {
 		return nil, errors.New("category not found")
 	}
 

@@ -3,7 +3,7 @@ package routes
 import (
 	"money-tracker/internal/config"
 	"money-tracker/internal/handler"
-	"money-tracker/internal/middleware"
+	// "money-tracker/internal/middleware"
 	"money-tracker/internal/repository"
 	"money-tracker/internal/usecase"
 
@@ -30,7 +30,7 @@ func buildHandlers() *Handlers {
 	ucCategory := usecase.NewCategoryUseCase(repoCat)
 	ucUser := usecase.NewUserUseCase(repoUser, repoToken)
 	ucTag := usecase.NewTagUseCase(repoTag)
-	ucPurchase := usecase.NewPurchaseUseCase(repoPurchase)
+	ucPurchase := usecase.NewPurchaseUseCase(repoPurchase, repoTag, repoCat)
 
 	// handlers
 	return &Handlers{
@@ -46,7 +46,7 @@ func MainRoutes(base string, router *gin.Engine) {
 	h := buildHandlers()
 
 	api := router.Group(base)
-	api.Use(middleware.AuthMiddleware([]int8{2}))
+	// api.Use(middleware.AuthMiddleware([]int8{2}))
 	{
 		api.POST("/tag", h.Tag.CreateTagHandler)
 		api.GET("/tag", h.Tag.GetAllTagsHandler)
@@ -58,10 +58,10 @@ func MainRoutes(base string, router *gin.Engine) {
 		api.PUT("/category", h.Category.UpdateCategoryHandler)
 		api.DELETE("/category/:id", h.Category.DeleteHandler)
 
-		api.GET("/purchase", h.Category.GetAllPublicCategoryHandler)
-		api.POST("/purchase", h.Category.CreateCategoryHandler)
-		api.PUT("/purchase", h.Category.UpdateCategoryHandler)
-		api.DELETE("/purchase/:id", h.Category.DeleteHandler)
+		api.GET("/purchase", h.Purchase.GetAllPurchaseHandler)
+		api.POST("/purchase", h.Purchase.CreatepurchaseHandler)
+		api.PUT("/purchase", h.Purchase.UpdatePurchaseHandler)
+		api.DELETE("/purchase/:id", h.Purchase.DeleteHandler)
 
 	}
 

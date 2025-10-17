@@ -22,7 +22,7 @@ type PurchaseFindAll struct {
 
 type AddPurchaseInput struct {
 	CategoryId    *uint     `json:"category_id" binding:"required"`
-	SubCategoryId *uint     `json:"sub_category_id"binding:"required"`
+	SubCategoryId *uint     `json:"sub_category_id`
 	Reason        string    `json:"reason"`
 	Date          time.Time `json:"date" binding:"required"`
 	Note          string    `json:"note"`

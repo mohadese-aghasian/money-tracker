@@ -80,7 +80,9 @@ func (h *UserHandler) LoginHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "logged in", "token": token, "level_manage": level_manage, "userId": user_id})
+	c.JSON(http.StatusOK, gin.H{"message": "logged in", "response": gin.H{
+		"token": token, "levelManage": level_manage, "userId": user_id,
+	}})
 }
 
 // @Summary Get all users
