@@ -1,0 +1,732 @@
+basePath: /
+definitions:
+  dto.AddPurchaseInput:
+    properties:
+      amount:
+        type: integer
+      category_id:
+        type: integer
+      color:
+        type: string
+      date:
+        type: string
+      method:
+        type: integer
+      note:
+        type: string
+      reason:
+        type: string
+      status_id:
+        enum:
+        - 1
+        - 0
+        type: integer
+      sub_category_id:
+        type: integer
+      tag_ids:
+        type: string
+    required:
+    - category_id
+    - date
+    - sub_category_id
+    type: object
+  dto.CreateCategoryRequest:
+    properties:
+      color:
+        type: string
+      status_id:
+        enum:
+        - 1
+        - 0
+        type: integer
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  dto.CreateTagRequest:
+    properties:
+      status_id:
+        enum:
+        - 1
+        - 0
+        type: integer
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  dto.ErrorGetResponse:
+    properties:
+      count:
+        type: integer
+      err: {}
+      message:
+        type: string
+      response: {}
+    type: object
+  dto.GetResponse:
+    properties:
+      count:
+        type: integer
+      message:
+        type: string
+      response: {}
+    type: object
+  dto.LoginReponse:
+    properties:
+      level_manage:
+        type: integer
+      message:
+        type: string
+      token:
+        type: string
+      userId:
+        type: integer
+    type: object
+  dto.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.RegisterRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      status_id:
+        type: integer
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.Response:
+    properties:
+      message:
+        type: string
+      response: {}
+    type: object
+  dto.UpdateCategoryRequest:
+    properties:
+      color:
+        description: Slug     string `json:"slug"`
+        type: string
+      id:
+        type: integer
+      status_id:
+        enum:
+        - 1
+        - 0
+        type: integer
+      tag_ids:
+        type: string
+      title:
+        type: string
+    required:
+    - id
+    type: object
+  dto.UpdatePurchaseInput:
+    properties:
+      amount:
+        type: integer
+      category_id:
+        type: integer
+      color:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      method:
+        type: integer
+      note:
+        type: string
+      reason:
+        type: string
+      status_id:
+        enum:
+        - 1
+        - 0
+        type: integer
+      sub_category_id:
+        type: integer
+      tag_ids:
+        type: string
+    required:
+    - id
+    type: object
+  dto.UpdateTagRequest:
+    properties:
+      id:
+        type: integer
+      status_id:
+        enum:
+        - 1
+        - 0
+        type: integer
+      title:
+        type: string
+    required:
+    - id
+    type: object
+host: localhost:4011
+info:
+  contact: {}
+  description: This is a sample API with Gin and Swagger.
+  title: money tracker API
+  version: "1.0"
+paths:
+  /api/v0/admin/users:
+    get:
+      description: Retrieves all users with optional filters and pagination.
+      parameters:
+      - description: Filter by User ID
+        in: query
+        name: id
+        type: integer
+      - description: Filter by Name
+        in: query
+        name: name
+        type: string
+      - description: Filter by Username
+        in: query
+        name: username
+        type: string
+      - description: Filter by Email
+        in: query
+        name: email
+        type: string
+      - description: Filter by Mobile
+        in: query
+        name: mobile
+        type: string
+      - description: Filter by Level Manage
+        format: int32
+        in: query
+        name: level_manage
+        type: integer
+      - description: Filter by Status ID
+        in: query
+        name: status_id
+        type: integer
+      - description: Show inactive users (true/false)
+        in: query
+        name: show_inactive
+        type: boolean
+      - description: Start offset for pagination
+        in: query
+        name: start
+        type: integer
+      - description: Limit number of records
+        in: query
+        name: limit
+        type: integer
+      - description: 'Column to order by (default: id)'
+        in: query
+        name: order_by
+        type: string
+      - description: 'Sort order: ASC or DESC'
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorGetResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all users
+      tags:
+      - user
+  /api/v0/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: login with the provided data.
+      parameters:
+      - description: sign up request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.LoginReponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: Login
+      tags:
+      - auth
+  /api/v0/auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user with the provided data.
+      parameters:
+      - description: sign up request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: Signup
+      tags:
+      - auth
+  /api/v0/auth/signup-admin:
+    get:
+      consumes:
+      - application/json
+      description: Creates a new user with the provided data.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: Signup
+      tags:
+      - auth
+  /api/v0/system/category:
+    get:
+      description: Retrieves all categories.
+      parameters:
+      - description: Start offset for pagination
+        in: query
+        name: start
+        type: integer
+      - description: Limit number of records
+        in: query
+        name: limit
+        type: integer
+      - description: 'Column to order by (default: id)'
+        in: query
+        name: order_by
+        type: string
+      - description: 'Sort order: ASC or DESC'
+        in: query
+        name: sort
+        type: string
+      - description: Filter by title
+        in: query
+        name: title
+        type: string
+      - description: Filter by ID
+        in: query
+        name: id
+        type: integer
+      - description: Filter by ParentID
+        in: query
+        name: parent_id
+        type: integer
+      - description: Filter by slug
+        in: query
+        name: slug
+        type: string
+      - collectionFormat: csv
+        description: Filter by Tag IDs (comma-separated)
+        in: query
+        items:
+          type: integer
+        name: tag_ids
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorGetResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all categories
+      tags:
+      - category
+    post:
+      consumes:
+      - application/json
+      description: Creates a new category with the provided data.
+      parameters:
+      - description: Category creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new category
+      tags:
+      - category
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing category with new data.
+      parameters:
+      - description: Category update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Update a category
+      tags:
+      - category
+  /api/v0/system/category/{id}:
+    delete:
+      description: Deletes a category by its ID.
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a category
+      tags:
+      - category
+  /api/v0/system/purchase:
+    get:
+      description: Retrieves all purchases.
+      parameters:
+      - description: Start offset for pagination
+        in: query
+        name: start
+        type: integer
+      - description: Limit number of records
+        in: query
+        name: limit
+        type: integer
+      - description: 'Column to order by (default: id)'
+        in: query
+        name: order_by
+        type: string
+      - description: 'Sort order: ASC or DESC'
+        in: query
+        name: sort
+        type: string
+      - description: Filter by reason
+        in: query
+        name: reason
+        type: string
+      - description: Filter by ID
+        in: query
+        name: id
+        type: integer
+      - description: Filter
+        in: query
+        name: category_id
+        type: integer
+      - description: Filter by StatusID
+        in: query
+        name: status_id
+        type: integer
+      - collectionFormat: csv
+        description: Filter by Tag IDs (comma-separated)
+        in: query
+        items:
+          type: integer
+        name: tag_ids
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorGetResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all purchases
+      tags:
+      - purchase
+    post:
+      consumes:
+      - application/json
+      description: Creates a new purchase with the provided data.
+      parameters:
+      - description: purchase creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddPurchaseInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new purchase
+      tags:
+      - purchase
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing purchase with new data.
+      parameters:
+      - description: Category update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePurchaseInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Update a purchase
+      tags:
+      - purchase
+  /api/v0/system/purchase/{id}:
+    delete:
+      description: Deletes a purchase by its ID.
+      parameters:
+      - description: purchase ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a purchase
+      tags:
+      - purchase
+  /api/v0/system/tag:
+    get:
+      description: Retrieves all tags.
+      parameters:
+      - description: Start
+        in: query
+        name: start
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        type: integer
+      - description: orderBy
+        in: query
+        name: order_by
+        type: string
+      - description: Sort
+        in: query
+        name: sort
+        type: string
+      - description: id
+        in: query
+        name: id
+        type: integer
+      - description: status_id
+        in: query
+        name: status_id
+        type: integer
+      - description: title
+        in: query
+        name: title
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorGetResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all tags
+      tags:
+      - tag
+    post:
+      consumes:
+      - application/json
+      description: Creates a new tag with the provided data.
+      parameters:
+      - description: Article creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTagRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new tag
+      tags:
+      - tag
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing tag with new data.
+      parameters:
+      - description: Tag update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTagRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Update a tag
+      tags:
+      - tag
+  /api/v0/system/tag/{id}:
+    delete:
+      description: Deletes a tag by its ID.
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a tag
+      tags:
+      - tag
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

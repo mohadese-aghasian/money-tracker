@@ -1,0 +1,47 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of `go build`
+/bin/
+/build/
+/dist/
+*.out
+
+# Go module files
+go.sum
+
+# Configuration files
+.env
+.env.*
+
+# IDE and editor-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+
+# Logs and debugging
+*.log
+*.tmp
+
+# Coverage files
+*.cover
+*.cov
+
+# Dependency directories
+/vendor/
+
+# Node.js (if using front-end within the project)
+node_modules/
+
+public/images/
+
+cmd/api/main.exe
+cmd/api/main.exe~
+
+/uploads/
